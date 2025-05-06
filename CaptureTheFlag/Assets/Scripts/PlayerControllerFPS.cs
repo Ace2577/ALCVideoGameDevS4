@@ -14,13 +14,15 @@ public class PlayerControllerFPS : MonoBehaviour
     private float rotx; //current x rotation on camera
     private Camera cam; //gets the camera
     private Rigidbody rig; //gets the rig
-    //private ProjectileWeapon weapon;
+    [Header("Weapon")]
+    private ProjectileWeapon weapon;
 
     void Awake() //happens before start
     {
         cam=Camera.main; //gets the camera
         rig=GetComponent<Rigidbody>(); //gets the rig
         Cursor.lockState=CursorLockMode.Locked; //disables and hides the cursor
+        weapon=GetComponent<ProjectileWeapon>();
     }
     // Update is called once per frame
     void Update()
@@ -31,11 +33,13 @@ public class PlayerControllerFPS : MonoBehaviour
         if(Input.GetButtonDown("Jump"))
             TryJump();
 
-        /* if (InputGetButton("Fire1"))
+         if (InputGetButton("Fire1"))
         {
-            if(weapon.CanShoot())
+            if(weapon.CanShoot()) //if you can shoot
+                weapon.Shoot(); //shoot
+
         }
-        */
+        
     }
     void Move()
     {
