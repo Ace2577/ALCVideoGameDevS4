@@ -33,7 +33,7 @@ public class PlayerControllerFPS : MonoBehaviour
         if(Input.GetButtonDown("Jump"))
             TryJump();
 
-         if (InputGetButton("Fire1"))
+         if (Input.GetButton("Fire1"))
         {
             if(weapon.CanShoot()) //if you can shoot
                 weapon.Shoot(); //shoot

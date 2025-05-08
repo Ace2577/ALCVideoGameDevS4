@@ -1,23 +1,76 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;// add AI namespace
+using System.Linq; //add Linq namespace
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Stats")]
+    public int curHP;
+    public int maxHP;
+    public int scoreToGive;
+    [Header("Movement")]
+    public float moveSpeed;
+    public float attackRange;
+    [Header("Path Info")]
+    public float yPathOffset;
+    private list <Vector3> path;
+    [Header("Weapon")]
+    //private Weapon weapon
+    private GameObject target;
     // Start is called before the first frame update
     void Start()
     {
-        
+        curHP = maxHP;
+        //gathers components
+        target=FindObjectOfType<PlayerController>().gameObject;
+        InvokeRepeating("UpdatePath",0.0f,0.5f);
     }
 
-    // Update is called once per frame
+    void UpdatePath()
+    {
+        NavMeshPath navMeshPath = new NavMeshPath();
+        NavMesh.calculatePath(transform.position, target.transform.position, NavMesh.AllAreas, navMeshPath); //calculates a path to player
+        path=navMeshPath.corners.ToList(); //saves path to a list
+    }
+
+    void ChaseTarget()
+    {
+        if(path.Count==0)
+            return;
+        transform.position = Vector3.MoveTowards(transform.position, path[0] + new Vector3(0, yPathOffset, 0), moveSpeed * Time.deltaTime);
+        if(transform.position==path[0] + new Vector3(0, yPathOffset, 0))
+            path.RemoveAt(0);
+    }
+
+    public void TakeDamage(int damageAmount)
+    {
+        curHP -= damage;
+        if(curHP<=0)
+            Die();
+    }
+
+    void Die()
+    {
+        Destroy(gameObject);
+    }
+
     void Update()
     {
-        
-    }
+        //look at targert
+        Vector3 dir = (target.transform.position-transform.position).normalized;
+        float angle = Mathf.Atan2(dir.x,dir.z)*Mathf.Rad2Deg;
+        transform.eulerAngles = Vector3.up*angle;
+        float dist = Vector3.Distance(transform.position, target.transform.position);
 
-   public void TakeDamage(int damageAmount)
-    {
-        
+        if(dist <= attackRange)
+        {
+
+        }
+        else
+        {
+            ChaseTarget();
+        }
     }
 }
