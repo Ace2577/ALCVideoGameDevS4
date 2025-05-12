@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     public float attackRange;
     [Header("Path Info")]
     public float yPathOffset;
-    private list <Vector3> path;
+    private List<Vector3> path;
     [Header("Weapon")]
     //private Weapon weapon
     private GameObject target;
@@ -24,14 +24,14 @@ public class Enemy : MonoBehaviour
     {
         curHP = maxHP;
         //gathers components
-        target=FindObjectOfType<PlayerController>().gameObject;
+        target=FindObjectOfType<PlayerControllerFPS>().gameObject;
         InvokeRepeating("UpdatePath",0.0f,0.5f);
     }
 
     void UpdatePath()
     {
         NavMeshPath navMeshPath = new NavMeshPath();
-        NavMesh.calculatePath(transform.position, target.transform.position, NavMesh.AllAreas, navMeshPath); //calculates a path to player
+        NavMesh.CalculatePath(transform.position, target.transform.position, NavMesh.AllAreas, navMeshPath); //calculates a path to player
         path=navMeshPath.corners.ToList(); //saves path to a list
     }
 
@@ -46,7 +46,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        curHP -= damage;
+        //curHP -= damage;
         if(curHP<=0)
             Die();
     }
