@@ -17,13 +17,14 @@ public class Enemy : MonoBehaviour
     public float yPathOffset;
     private List<Vector3> path;
     [Header("Weapon")]
-    //private Weapon weapon
+    private ProjectileWeapon weapon;
     private GameObject target;
     // Start is called before the first frame update
     void Start()
     {
         curHP = maxHP;
         //gathers components
+        weapon=GetComponent<ProjectileWeapon>();
         target=FindObjectOfType<PlayerControllerFPS>().gameObject;
         InvokeRepeating("UpdatePath",0.0f,0.5f);
     }
@@ -46,7 +47,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(int damageAmount)
     {
-        //curHP -= damage;
+      //  curHP -= damage;
         if(curHP<=0)
             Die();
     }
@@ -58,7 +59,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        //look at targert
+        //look at target
         Vector3 dir = (target.transform.position-transform.position).normalized;
         float angle = Mathf.Atan2(dir.x,dir.z)*Mathf.Rad2Deg;
         transform.eulerAngles = Vector3.up*angle;
@@ -66,7 +67,8 @@ public class Enemy : MonoBehaviour
 
         if(dist <= attackRange)
         {
-
+            if(weapon.CanShoot())
+                weapon.Shoot();
         }
         else
         {
